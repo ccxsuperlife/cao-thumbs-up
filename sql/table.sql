@@ -18,24 +18,24 @@ create table if not exists `blog`
     `coverImg`   varchar(1024) not null comment '博客封面',
     `content`    text          not null comment '博客内容',
     `thumbCount` int      default 0 comment '点赞数',
-    `user_id`    bigint        not null comment '用户id',
+    `userId`     bigint        not null comment '用户id',
     `createTime` datetime default current_timestamp comment '创建时间',
     `updateTime` datetime default current_timestamp on update current_timestamp comment '更新时间',
     primary key (`id`)
 ) engine = innodb
   default charset = utf8mb4;
 
-create index `idx_userId` on `blog` (`user_id`);
+create index `idx_userId` on `blog` (`userId`);
 
--- 点赞表
+-- 点赞记录表
 create table if not exists `thumb`
 (
     `id`         bigint not null auto_increment comment '点赞id',
-    `blog_id`    bigint not null comment '博客id',
-    `user_id`    bigint not null comment '用户id',
+    `blogId`     bigint not null comment '博客id',
+    `userId`     bigint not null comment '用户id',
     `createTime` datetime default current_timestamp comment '创建时间',
     primary key (`id`)
 ) engine = innodb
   default charset = utf8mb4;
 
-create index `idx_userId_blogId` on `thumb` (user_id, `blog_id`);
+create index `idx_userId_blogId` on `thumb` (userId, `blogId`);
