@@ -3,6 +3,8 @@ package com.cao.thumbsup.model.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
 
@@ -12,7 +14,9 @@ import lombok.Data;
  */
 @TableName(value ="blog")
 @Data
-public class Blog {
+public class Blog implements Serializable {
+
+    private static final long serialVersionUID = -2738999971956201283L;
     /**
      * 博客id
      */
