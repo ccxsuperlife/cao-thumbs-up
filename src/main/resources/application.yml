@@ -16,9 +16,6 @@ spring:
     url: jdbc:mysql://localhost:3306/thumbs?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 123456
-  session:
-    store-type: redis  # 使用 Redis 存储会话
-    timeout: 2592000   # session 30 天后过期
   data:
     # Redis Config
     redis:
@@ -29,11 +26,12 @@ spring:
       timeout: 5000
 
 
+
 #  mybatis-plus:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     local-cache-scope: session # 一级缓存
     cache-enabled: true # 二级缓存
 

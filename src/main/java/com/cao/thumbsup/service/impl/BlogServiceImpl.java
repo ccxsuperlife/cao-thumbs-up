@@ -12,6 +12,7 @@ import com.cao.thumbsup.service.BlogService;
 import com.cao.thumbsup.mapper.BlogMapper;
 import com.cao.thumbsup.service.ThumbService;
 import com.cao.thumbsup.service.UserService;
+import com.cao.thumbsup.util.RedisKeyUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +69,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog>
             List<Object> blogIds = blogList.stream().map(blog -> blog.getId().toString()).collect(Collectors.toList());
             // 获取用户点赞的博客列表的逻辑从MySQL判断到Redis判断
 //            List<Thumb> thumbList = thumbService.lambdaQuery().eq(Thumb::getUserId, loginUser.getId()).in(Thumb::getBlogId, blogIdSet).list();
-            String userThumbKey = ThumbConstant.USER_THUMB_KEY_PREFIX + loginUser.getId().toString();
+            String userThumbKey = RedisKeyUtil.getUserThumbKey(loginUser.getId());
             List<Object> thumbList = redisTemplate.opsForHash().multiGet(userThumbKey, blogIds);
             for (int i = 0; i < thumbList.size(); i++) {
                 if (thumbList.get(i) == null) {

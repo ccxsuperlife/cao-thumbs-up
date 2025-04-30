@@ -3,7 +3,7 @@ package com.cao.thumbsup.model.dto.thumb;
 import lombok.Data;
 
 /**
- * 请求封装类
+ * 点赞请求封装类
  */
 @Data
 public class DoThumbRequest {
