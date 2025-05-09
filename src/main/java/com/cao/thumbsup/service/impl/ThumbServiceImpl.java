@@ -2,9 +2,7 @@ package com.cao.thumbsup.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.cao.thumbsup.constant.ThumbConstant;
 import com.cao.thumbsup.exception.BusinessException;
 import com.cao.thumbsup.exception.ErrorCode;
 import com.cao.thumbsup.model.dto.cache.HotThumb;

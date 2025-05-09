@@ -1,40 +1,31 @@
 package com.cao.thumbsup.service.impl;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cao.thumbsup.constant.RedisLuaScriptConstant;
 import com.cao.thumbsup.exception.BusinessException;
 import com.cao.thumbsup.exception.ErrorCode;
 import com.cao.thumbsup.mapper.ThumbMapper;
-import com.cao.thumbsup.model.dto.cache.HotThumb;
 import com.cao.thumbsup.model.dto.thumb.DoThumbRequest;
-import com.cao.thumbsup.model.entity.Blog;
 import com.cao.thumbsup.model.entity.Thumb;
 import com.cao.thumbsup.model.entity.User;
 import com.cao.thumbsup.model.enums.LuaStatusEnum;
-import com.cao.thumbsup.service.BlogService;
 import com.cao.thumbsup.service.ThumbService;
 import com.cao.thumbsup.service.UserService;
 import com.cao.thumbsup.util.RedisKeyUtil;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
 
-import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Date;
 
 /**
- * @author baogondian
- * @description 针对表【thumb】的数据库操作Service实现
- * @createDate 2025-04-28 13:51:59
+ * @author 小曹同学
  */
-@Service
+@Service("thumbService")
 @Slf4j
 @RequiredArgsConstructor
 public class ThumbServiceRedisImpl extends ServiceImpl<ThumbMapper, Thumb>
@@ -60,7 +51,7 @@ public class ThumbServiceRedisImpl extends ServiceImpl<ThumbMapper, Thumb>
         String tempThumbKey = RedisKeyUtil.getTempThumbKey(timeSlice);
         String userThumbKey = RedisKeyUtil.getUserThumbKey(loginUser.getId());
         // 执行 Lua 脚本
-        Long result = redisTemplate.execute(
+        long result = redisTemplate.execute(
                 RedisLuaScriptConstant.THUMB_SCRIPT,
                 Arrays.asList(tempThumbKey, userThumbKey),
                 loginUser.getId(),
@@ -87,13 +78,13 @@ public class ThumbServiceRedisImpl extends ServiceImpl<ThumbMapper, Thumb>
         String userThumbKey = RedisKeyUtil.getUserThumbKey(loginUser.getId());
 
         // 执行Lua脚本
-        Long result = redisTemplate.execute(
+        long result = redisTemplate.execute(
                 RedisLuaScriptConstant.UNTHUMB_SCRIPT,
                 Arrays.asList(tempThumbKey, userThumbKey),
                 loginUser.getId(),
                 blogId);
 
-        if(LuaStatusEnum.FAIL.getValue() == result){
+        if (LuaStatusEnum.FAIL.getValue() == result) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "用户未点赞");
         }
         return LuaStatusEnum.SUCCESS.getValue() == result;
@@ -112,12 +103,12 @@ public class ThumbServiceRedisImpl extends ServiceImpl<ThumbMapper, Thumb>
      *
      * @param blogId
      * @param userId
-     * @return
      */
     @Override
     public Boolean hasThumb(Long blogId, Long userId) {
         return redisTemplate.opsForHash().hasKey(RedisKeyUtil.getUserThumbKey(userId), blogId.toString());
     }
+
 }
 
 

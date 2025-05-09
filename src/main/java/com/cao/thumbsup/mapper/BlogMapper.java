@@ -2,6 +2,9 @@ package com.cao.thumbsup.mapper;
 
 import com.cao.thumbsup.model.entity.Blog;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Map;
 
 /**
 * @author baogondian
@@ -10,6 +13,14 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.cao.thumbsup.model.entity.Blog
 */
 public interface BlogMapper extends BaseMapper<Blog> {
+
+    /**
+     * 批量更新博客点赞数
+     * @param countMap
+     * key blogId
+     * value thumbCount
+     */
+    void batchUpdateThumbCount(@Param("countMap") Map<Long,Long> countMap);
 
 }
 

@@ -3,7 +3,6 @@ package com.cao.thumbsup.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.cao.thumbsup.constant.ThumbConstant;
 import com.cao.thumbsup.constant.UserConstant;
 import com.cao.thumbsup.model.entity.Blog;
 import com.cao.thumbsup.model.entity.User;

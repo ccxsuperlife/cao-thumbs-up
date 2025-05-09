@@ -16,7 +16,19 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,title,coverImg,content,thumbCount,userId,
+        id
+        ,title,coverImg,content,thumbCount,userId,
         createTime,updateTime
     </sql>
+    <update id="batchUpdateThumbCount">
+        update blog set thumbCount = thumbCount + CASE id
+        <foreach collection="countMap.entrySet()" item="value" index="key">
+            WHEN #{key} THEN #{value}
+        </foreach>
+        END where id in
+        <foreach collection="countMap.keySet()" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
+    </update>
 </mapper>

@@ -10,6 +10,7 @@ public class RedisKeyUtil {
 
     /**
      * 获取用户点赞key
+     *
      * @param userId
      * @return
      */
@@ -19,7 +20,8 @@ public class RedisKeyUtil {
 
     /**
      * 获取临时点赞key
-     * @param time
+     *
+     * @param time 按时间戳分片存储同步
      * @return
      */
     public static String getTempThumbKey(String time) {
