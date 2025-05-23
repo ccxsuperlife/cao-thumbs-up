@@ -25,6 +25,7 @@ import java.util.Date;
 /**
  * @author 小曹同学
  */
+@SuppressWarnings("ALL")
 @Service("thumbService")
 @Slf4j
 @RequiredArgsConstructor
@@ -55,7 +56,9 @@ public class ThumbServiceRedisImpl extends ServiceImpl<ThumbMapper, Thumb>
                 RedisLuaScriptConstant.THUMB_SCRIPT,
                 Arrays.asList(tempThumbKey, userThumbKey),
                 loginUser.getId(),
-                blogId);
+                blogId,
+                DateUtil.format(DateUtil.date(), "yyyy-MM-dd HH:mm:ss")
+        );
         if (LuaStatusEnum.FAIL.getValue() == result) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "用户已点赞");
         }
@@ -82,7 +85,9 @@ public class ThumbServiceRedisImpl extends ServiceImpl<ThumbMapper, Thumb>
                 RedisLuaScriptConstant.UNTHUMB_SCRIPT,
                 Arrays.asList(tempThumbKey, userThumbKey),
                 loginUser.getId(),
-                blogId);
+                blogId,
+                DateUtil.format(DateUtil.date(), "yyyy-MM-dd HH:mm:ss")
+        );
 
         if (LuaStatusEnum.FAIL.getValue() == result) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "用户未点赞");
@@ -92,11 +97,17 @@ public class ThumbServiceRedisImpl extends ServiceImpl<ThumbMapper, Thumb>
     }
 
 
+    /**
+     * 获取时间切片
+     *
+     * @return
+     */
     private static String getTimeSlice() {
         Date nowDate = DateUtil.date();
         // 获取到当前时间前最近的整数秒，比如当前 11:20:23 ，获取到 11:20:20
         return DateUtil.format(nowDate, "HH:mm:") + (DateUtil.second(nowDate) / 10) * 10;
     }
+
 
     /**
      * 判断用户是否已点赞

@@ -17,8 +17,8 @@ public interface BlogMapper extends BaseMapper<Blog> {
     /**
      * 批量更新博客点赞数
      * @param countMap
-     * key blogId
-     * value thumbCount
+     * key blogId 博客ID
+     * value thumbCount 点赞数
      */
     void batchUpdateThumbCount(@Param("countMap") Map<Long,Long> countMap);
 

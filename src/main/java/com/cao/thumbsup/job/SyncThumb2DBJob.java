@@ -1,28 +1,29 @@
 package com.cao.thumbsup.job;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.unit.DataUnit;
 import cn.hutool.core.text.StrPool;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cao.thumbsup.mapper.BlogMapper;
+import com.cao.thumbsup.model.dto.thumb.ThumbTempRequest;
 import com.cao.thumbsup.model.entity.Thumb;
 import com.cao.thumbsup.model.enums.ThumbTypeEnum;
 import com.cao.thumbsup.service.ThumbService;
 import com.cao.thumbsup.util.RedisKeyUtil;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author 小曹同学
@@ -54,14 +55,14 @@ public class SyncThumb2DBJob {
             // 获取上一分钟
             nowDate = DateUtil.offsetMinute(nowDate, -1);
         }
-        String timeSlice = DateUtil.format(nowDate, "HH:mm:") + second;
-        syncThumb2DBByDate(timeSlice);
-        log.info("当前时间片：{},临时数据同步完成", timeSlice);
+        String date = DateUtil.format(nowDate, "HH:mm:") + second;
+        syncThumb2DBByDate(date);
+        log.info("当前时间片：{},临时数据同步完成", date);
     }
 
-    private void syncThumb2DBByDate(String timeSlice) {
+    public void syncThumb2DBByDate(String date) {
         // 获取临时点赞和取消点赞数据
-        String tempThumbKey = RedisKeyUtil.getTempThumbKey(timeSlice);
+        String tempThumbKey = RedisKeyUtil.getTempThumbKey(date);
         Map<Object, Object> allTempThumbMap = redisTemplate.opsForHash().entries(tempThumbKey);
         boolean thumbMapEmpty = CollUtil.isEmpty(allTempThumbMap);
         if (thumbMapEmpty) {
@@ -79,12 +80,20 @@ public class SyncThumb2DBJob {
             String[] userIdAndBlogId = userIdBlogId.split(StrPool.COLON);
             Long userId = Long.valueOf(userIdAndBlogId[0]);
             Long blogId = Long.valueOf(userIdAndBlogId[1]);
+            // {"type":1,time:'2025-01-01 00:00:00'}  -1 取消点赞，1 点赞
+            Object value = allTempThumbMap.get(userIdBlogId);
+            ThumbTempRequest thumbTemp = BeanUtil.copyProperties(value, ThumbTempRequest.class);
+            if (thumbTemp == null) {
+                continue;
+            }
             // -1 取消点赞 1 点赞
-            Integer thumbType = Integer.valueOf(allTempThumbMap.get(userIdBlogId).toString());
+            Integer thumbType = Optional.ofNullable(thumbTemp.getType()).orElse(0);
+
             if (thumbType == ThumbTypeEnum.INCR.getValue()) {
                 Thumb thumb = new Thumb();
                 thumb.setUserId(userId);
                 thumb.setBlogId(blogId);
+                thumb.setCreateTime(DateUtil.parse(thumbTemp.getTime()));
                 // 批量更新
                 thumbList.add(thumb);
             } else if (thumbType == ThumbTypeEnum.DECR.getValue()) {
@@ -113,10 +122,6 @@ public class SyncThumb2DBJob {
         blogMapper.batchUpdateThumbCount(blogThumbCountMap);
 
         // 异步删除临时点赞记录
-        redisTemplate.delete(tempThumbKey);
-
-
+        Thread.startVirtualThread(() -> redisTemplate.delete(tempThumbKey));
     }
-
-
 }

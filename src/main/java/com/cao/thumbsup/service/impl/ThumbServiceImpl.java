@@ -151,7 +151,7 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb>
         //  判断是否为null
         HotThumb hotThumb = (HotThumb) hotThumbObj;
         if (hotThumbObj == null) {
-            //   从MySQL中获取点赞记录
+            // 从MySQL中获取点赞记录
             Thumb thumb = this.lambdaQuery().eq(Thumb::getUserId, userId).eq(Thumb::getBlogId, blogId).one();
             return thumb != null;
         }

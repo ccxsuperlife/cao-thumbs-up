@@ -20,6 +20,7 @@ public class HotThumb implements Serializable {
 
     @Schema(description = "点赞id")
     private Long ThumbId;
+
     @Schema(description = "点赞过期时间")
     private Long expireTime;
 

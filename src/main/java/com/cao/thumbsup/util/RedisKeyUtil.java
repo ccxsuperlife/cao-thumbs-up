@@ -22,7 +22,7 @@ public class RedisKeyUtil {
      * 获取临时点赞key
      *
      * @param time 按时间戳分片存储同步
-     * @return
+     * @return 缓存key
      */
     public static String getTempThumbKey(String time) {
         return String.format(ThumbConstant.TEMP_THUMB_KEY_PREFIX, time);
