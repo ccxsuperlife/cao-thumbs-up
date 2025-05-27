@@ -26,7 +26,7 @@ import java.util.Date;
  * @author 小曹同学
  */
 @SuppressWarnings("ALL")
-@Service("thumbService")
+@Service("thumbServiceRedis")
 @Slf4j
 @RequiredArgsConstructor
 public class ThumbServiceRedisImpl extends ServiceImpl<ThumbMapper, Thumb>

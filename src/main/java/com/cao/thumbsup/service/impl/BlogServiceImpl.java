@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cao.thumbsup.constant.UserConstant;
+import com.cao.thumbsup.manager.cache.CacheManager;
 import com.cao.thumbsup.model.entity.Blog;
 import com.cao.thumbsup.model.entity.User;
 import com.cao.thumbsup.model.vo.BlogVO;
@@ -42,6 +43,9 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog>
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Resource
+    private CacheManager cacheManager;
 
     @Override
     public BlogVO getBlogVOById(Long blogId, HttpServletRequest request) {

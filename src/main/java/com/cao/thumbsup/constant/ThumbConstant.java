@@ -10,4 +10,7 @@ public interface ThumbConstant {
     // 临时点赞key前缀
     String TEMP_THUMB_KEY_PREFIX = "thumb:temp:%s";
 
+    // 未点赞
+    Long UN_THUMB_CONSTANT = 0L;
+
 }

@@ -9,7 +9,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @SpringBootApplication
 @MapperScan("com.cao.thumbsup.mapper")
 @EnableRedisHttpSession // 启用Redis存储Session
-@EnableScheduling // 启用定时任务
+//@EnableScheduling // 启用定时任务
 public class ThumbsUpApplication {
 
 	public static void main(String[] args) {

@@ -116,7 +116,6 @@ public class HeavyKeeper implements TopK {
         byte[] keyBytes = key.getBytes();
         long itemFingerprint = hash(keyBytes);
         int maxCount = 0;
-
         for (int i = 0; i < depth; i++) {
             int bucketNumber = Math.abs(hash(keyBytes)) % width;
             Bucket bucket = buckets[i][bucketNumber];
@@ -199,5 +198,4 @@ class AddResult {
         this.isHotKey = isHotKey;
         this.currentKey = currentKey;
     }
-
 }

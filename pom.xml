@@ -16,6 +16,8 @@
 
     <properties>
         <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -63,6 +65,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- 引入 Jedis -->
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
